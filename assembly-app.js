@@ -140,10 +140,6 @@ function GetListData() {
         return;
     }
 
-    Array.from(document.getElementsByClassName('container')).forEach(element => {
-        element.classList.add("hidden");
-    });
-
     components.length = 0;
 
     for (const div of formContainer.children) {
@@ -187,7 +183,6 @@ async function CheckWithAI(prompt) {
 
         data.components.forEach((c) => {
             const table = document.createElement("table");
-            table.classList.remove("hidden");
             table.className = "mt-4 border";
 
             Object.entries(c).forEach(([k, v]) => {
@@ -207,17 +202,9 @@ async function CheckWithAI(prompt) {
             wiring.appendChild(table);
         });
 
-        document.getElementById("code").classList.remove("hidden");
-
         document.getElementById("code").innerHTML = data.code
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
-
-        
-
-        Array.from(document.getElementsByClassName('container')).forEach(element => {
-            element.classList.remove("hidden");
-        });
     } catch (err) {
         console.error(err);
     }
@@ -295,18 +282,8 @@ function AssemblyApp() {
                         </button>
                     </div>
 
-                    <div class="container flex flex-row gap-2 btn hidden">
-                        <div class="w-4 h-4 rounded-full bg-cyan-500 animate-bounce"></div>
-                            <div
-                                class="w-4 h-4 rounded-full bg-cyan-500 animate-bounce [animation-delay:-.3s]"
-                            ></div>
-                        <div
-                            class="w-4 h-4 rounded-full bg-cyan-500 animate-bounce [animation-delay:-.5s]"
-                        ></div>
-                    </div>
-
-                    <div id="componentWiringContainer" class="styled-table hidden"/>
-                    <pre id="code" class="styled-pre hidden"/>
+                    <div id="componentWiringContainer" class="styled-table"/>
+                    <pre id="code" class="styled-pre"/>
                 </div>
             </main>
 
