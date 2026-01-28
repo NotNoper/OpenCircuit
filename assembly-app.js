@@ -1,6 +1,4 @@
 let components = [];
-const formContainer = document.getElementById("componentListContainer");
-const container = document.createElement('div');
 
 async function FindPart(imgBase64) {
     try {
@@ -65,6 +63,8 @@ function RevealCamera() {
 }
 
 function AddComponent(knownComponent = null) {
+    const formContainer = document.getElementById("componentListContainer");
+    const container = document.createElement('div');
     container.className = 'componentList';
 
     const selectComponent = document.createElement('select');
@@ -133,6 +133,7 @@ function AddComponent(knownComponent = null) {
 
 
 function GetListData() {
+    const formContainer = document.getElementById("componentListContainer");
     const promptEl = document.getElementById("projectPrompt");
     if (!promptEl.value) {
         alert("Enter a project description.");
