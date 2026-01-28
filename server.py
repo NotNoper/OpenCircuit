@@ -65,7 +65,7 @@ def CheckAI():
             temperature=0.2,
             top_p=0.2,
             messages=[
-                {"role": "system", "content": 'You are a senior engineer working out the wiring of components for someones project. Return ONLY valid JSON. The JSON must follow this structure exactly: {"components": [{"name": "string","type": "string","pins": {"PIN_NAME": "DESCRIPTION"}}]}'},
+                {"role": "system", "content": 'You are a senior engineer working out the wiring of components for someones project. Return ONLY valid JSON. The JSON must follow this structure exactly: {"components": [{"name": "string","type": "string","pins": {"PIN_NAME": "DESCRIPTION"}}]}. Also add a section called "code" with the code if it is necessary'},
                 {"role": "user", "content": prompt}
             ]
         )
