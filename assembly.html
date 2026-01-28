@@ -148,6 +148,30 @@
             @apply text-xs text-red-400 hover:text-red-300 transition;
         }
 
+        .styled-pre {
+            @apply mt-4 p-4 rounded-xl
+            bg-[var(--bg-dark)]
+            text-cyan-300
+            text-sm font-mono
+            border border-cyan-500/20
+            shadow-inner shadow-black/40
+            overflow-x-auto
+            whitespace-pre-wrap
+            leading-relaxed
+            relative;
+        }
+
+        .styled-pre::before {
+            content: "OUTPUT";
+            @apply absolute -top-3 left-4
+            px-2 py-0.5
+            text-[10px] font-semibold tracking-widest
+            text-cyan-300
+            bg-[var(--bg-card)]
+            border border-cyan-500/30
+            rounded-md;
+        }
+
         #camContainer {
             @apply relative
             w-full max-w-md

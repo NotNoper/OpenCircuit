@@ -207,7 +207,6 @@ async function CheckWithAI(prompt) {
             .replace(/>/g, "&gt;");
     } catch (err) {
         console.error(err);
-        alert("AI failed.");
     }
 }
 
@@ -283,8 +282,8 @@ function AssemblyApp() {
                         </button>
                     </div>
 
-                    <div id="componentWiringContainer" />
-                    <pre id="code" />
+                    <div id="componentWiringContainer" class="styled-table"/>
+                    <pre id="code" class="styled-pre"/>
                 </div>
             </main>
 
