@@ -187,6 +187,7 @@ async function CheckWithAI(prompt) {
 
         data.components.forEach((c) => {
             const table = document.createElement("table");
+            table.classList.remove("hidden");
             table.className = "mt-4 border";
 
             Object.entries(c).forEach(([k, v]) => {
@@ -206,9 +207,13 @@ async function CheckWithAI(prompt) {
             wiring.appendChild(table);
         });
 
+        document.getElementById("code").classList.remove("hidden");
+
         document.getElementById("code").innerHTML = data.code
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
+
+        
 
         Array.from(document.getElementsByClassName('container')).forEach(element => {
             element.classList.remove("hidden");
