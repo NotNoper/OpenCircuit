@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Open Circuit</title>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+    
+    <style type="text/tailwindcss">
+    @layer theme {
+        :root {
+            --primary-color: #06b6d4;
+            --primary-dark: #0891b2;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+    }
+    @layer base {
+        body { @apply bg-[var(--bg-dark)] text-[var(--text-main)] font-sans antialiased; }
+    }
+    @layer components {
+        .btn { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)] focus:ring-offset-[var(--bg-dark)]; }
+        .btn-primary { @apply bg-[var(--primary-color)] text-white hover:bg-[var(--primary-dark)] shadow-[0_0_15px_rgba(6,182,212,0.3)]; }
+        .btn-outline { @apply border border-[var(--text-muted)] text-[var(--text-main)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]; }
+        .input-field { @apply w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition-colors; }
+    }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel" src="components/Navigation.js"></script>
+    <script type="text/babel" src="components/Footer.js"></script>
+    <script type="text/babel" src="signup-app.js"></script>
+</body>
+</html>

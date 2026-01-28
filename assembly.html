@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Assistant - Open Circuit</title>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react@18/umd/react.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://resource.trickle.so/vendor_lib/unpkg/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://resource.trickle.so/vendor_lib/unpkg/lucide-static@0.516.0/font/lucide.css" rel="stylesheet">
+
+    <style type="text/tailwindcss">
+    @layer theme {
+        :root {
+            --primary-color: #06b6d4;
+            --primary-dark: #0891b2;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+    }
+    @layer base {
+        body { @apply bg-[var(--bg-dark)] text-[var(--text-main)] font-sans antialiased; }
+    }
+    @layer components {
+        .btn { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200; }
+        .btn-primary { @apply bg-[var(--primary-color)] text-white hover:bg-[var(--primary-dark)]; }
+        .camera-overlay { @apply absolute inset-0 border-2 border-cyan-500/30 rounded-lg pointer-events-none; }
+        .input-field { 
+            @apply w-full px-4 py-2 rounded-lg 
+            bg-[var(--bg-card)]
+            text-[var(--text-main)]
+            placeholder-[var(--text-muted)]
+            border border-cyan-500/20
+            focus:outline-none
+            focus:ring-2 focus:ring-cyan-500/40
+            focus:border-cyan-400
+            transition-all duration-200;
+        }
+
+        .styled-list {
+            @apply mt-6 space-y-5;
+        }
+
+        .componentList {
+            @apply bg-[var(--bg-card)]
+            border border-cyan-500/15
+            rounded-xl
+            px-5 py-4
+            space-y-2 
+            transition-all duration-200;
+        }
+
+        .componentList:hover {
+            @apply border-cyan-400/40
+            shadow-lg shadow-cyan-500/5;
+        }
+
+        .componentList select {
+            @apply w-fit min-w-[14rem] max-w-[18rem]
+            bg-[var(--bg-dark)]
+            text-[var(--text-main)]
+            px-3 py-1.5
+            rounded-md
+            border border-cyan-500/20
+            text-sm
+            focus:outline-none
+            focus:ring-2 focus:ring-cyan-500/40
+            transition;
+        }
+
+        .componentList input {
+            @apply w-fit min-w-[14rem] max-w-[18rem]
+            bg-[var(--bg-dark)]
+            text-[var(--text-main)]
+            px-3 py-1.5
+            rounded-md
+            border border-cyan-500/20
+            placeholder-[var(--text-muted)]
+            text-sm
+            focus:outline-none
+            focus:ring-2 focus:ring-cyan-500/40
+            transition;
+        }
+
+        .componentList label {
+            @apply block text-xs text-[var(--text-muted)] mb-1;
+        }
+
+        .componentList p {
+            @apply text-xs text-[var(--text-muted)];
+        }
+
+        .componentList button {
+            @apply mt-2 text-xs text-red-400
+            hover:text-red-300
+            transition;
+        }
+
+        #camContainer {
+            @apply relative
+            w-full max-w-md
+            mx-auto
+            mt-6
+            bg-[var(--bg-card)]
+            border border-cyan-500/20
+            rounded-2xl
+            p-4;
+        }
+
+        #camera,
+        #canvas {
+            @apply w-full
+            aspect-video
+            object-cover
+            rounded-xl
+            bg-black
+            border border-cyan-500/20;
+        }
+
+        #canvas {
+            @apply shadow-inner shadow-black/40;
+        }
+
+        #camera {
+            @apply shadow-lg shadow-cyan-500/10;
+        }
+
+        .camera-overlay {
+            @apply absolute inset-4
+            border-2 border-dashed
+            border-cyan-400/40
+            rounded-xl
+            pointer-events-none;
+        }
+    }
+    
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel" src="components/Navigation.js"></script>
+    <script type="text/babel" src="components/Footer.js"></script>
+    <script type="text/babel" src="assembly-app.js"></script>
+</body>
+</html>
