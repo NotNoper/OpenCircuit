@@ -5,4 +5,4 @@ dotenv
 gunicorn
 requests
 serpapi
-fitz
+PyMuPDF
