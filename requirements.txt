@@ -5,6 +5,5 @@ dotenv
 gunicorn
 requests
 serpapi
-cv2
 pytesseract
 fitz
