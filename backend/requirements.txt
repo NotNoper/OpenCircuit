@@ -4,5 +4,5 @@ openai
 dotenv
 gunicorn
 requests
-serpapi
+google-search-results
 PyMuPDF
