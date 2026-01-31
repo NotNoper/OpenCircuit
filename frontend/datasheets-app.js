@@ -4,7 +4,7 @@ function GetListData() {
         alert("Enter a component.");
         return;
     }
-
+    console.log(promptEl.value);
     SearchDatasheetInformation(promptEl.value);
 }
 

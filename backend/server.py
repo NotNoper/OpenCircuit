@@ -99,7 +99,7 @@ if __name__ == '__main__':
 @app.route('/search-datasheet-information', methods=['POST'])
 def SearchDatasheetInformation():
     data = request.json
-    componentToSearch = data.get('componentToSearch')
+    componentToSearch = data.get('componentName')
     params = {
         "engine": "google_light",
         "q": componentToSearch + " datasheet filetype:pdf",
