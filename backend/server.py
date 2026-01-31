@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 import fitz
-import cv2
+#import cv2
 from serpapi import GoogleSearch
 import requests
-import pytesseract
+#import pytesseract
 
 load_dotenv() 
 
@@ -130,18 +130,18 @@ def SearchDatasheetInformation():
         extractPDFTextAndImages(filepath)
         return jsonify(SummarizeExtractedInfo())
 
-def ocr_image(image_path):
-    img = cv2.imread(image_path)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#def ocr_image(image_path):
+#    img = cv2.imread(image_path)
+#    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    gray = cv2.adaptiveThreshold(
-        gray, 255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        31, 2
-    )
+#    gray = cv2.adaptiveThreshold(
+#        gray, 255,
+#        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+#        cv2.THRESH_BINARY,
+#        31, 2
+#    )
 
-    return pytesseract.image_to_string(gray, config="--psm 6")
+#    return pytesseract.image_to_string(gray, config="--psm 6")
 
 
 def extractPDFTextAndImages(path):
@@ -153,12 +153,12 @@ def extractPDFTextAndImages(path):
 
         text = page.get_text()
 
-        if not text.strip():
-            pix = page.get_pixmap(dpi=300)
-            img_path = os.path.join("static", f"page_{page_num+1}.png")
-            pix.save(img_path)
+        #if not text.strip():
+        #    pix = page.get_pixmap(dpi=300)
+        #    img_path = os.path.join("static", f"page_{page_num+1}.png")
+        #    pix.save(img_path)
 
-            text = ocr_image(img_path)
+        #    text = ocr_image(img_path)
 
         lines = text.split("\n")
         for i, line in enumerate(lines):
