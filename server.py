@@ -96,7 +96,7 @@ def CheckAI():
 if __name__ == '__main__':
     app.run(debug=True)
 
-@app.route('/seach-datasheet-information', methods=['POST'])
+@app.route('/search-datasheet-information', methods=['POST'])
 def SearchDatasheetInformation():
     data = request.json
     componentToSearch = data.get('componentToSearch')
