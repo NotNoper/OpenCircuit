@@ -3,3 +3,8 @@ flask_cors
 openai
 dotenv
 gunicorn
+requests
+serpapi
+cv2
+pytesseract
+fitz

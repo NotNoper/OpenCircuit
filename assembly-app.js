@@ -1,3 +1,5 @@
+import res from "express/lib/response";
+
 let components = [];
 
 async function FindPart(imgBase64) {
@@ -28,6 +30,33 @@ async function FindPart(imgBase64) {
     } catch (err) {
         console.error("Image upload failed:", err);
         alert("Image recognition failed.");
+    }
+}
+
+async function FindPart(componentName) {
+    try {
+        const response = await fetch(
+            "https://nikovision.onrender.com/seach-datasheet-information",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ componentName: componentName }),
+            }
+        );
+
+        const result = await response.json();
+        console.log(result.summary);
+        console.log(result.absoluteMaximumRatings);
+        console.log(result.sda);
+        console.log(result.scl);
+        console.log(result.i2c);
+        console.log(result.currentConsumption);
+        console.log(result.vcc);
+        console.log(result.voltage);
+        
+    } catch (err) {
+        console.error("Failed:", err);
+        alert("Failed.");
     }
 }
 
