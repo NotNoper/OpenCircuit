@@ -1,3 +1,5 @@
+import res from "express/lib/response";
+
 function GetListData() {
     const promptEl = document.getElementById("projectPrompt");
     if (!promptEl.value) {
@@ -20,14 +22,9 @@ async function SearchDatasheetInformation(componentName) {
         );
 
         const result = await response.json();
-        console.log(result.summary);
-        console.log(result.absoluteMaximumRatings);
-        console.log(result.sda);
-        console.log(result.scl);
-        console.log(result.i2c);
-        console.log(result.currentConsumption);
-        console.log(result.vcc);
-        console.log(result.voltage);
+        
+        const textOutput = document.getElementById("textOutput");
+        textOutput.textContent = result.result
         
     } catch (err) {
         console.error("Failed:", err);
@@ -71,6 +68,11 @@ function DatasheetsApp() {
                             <span class="bg-sky-400 shadow-sky-400 absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 group-hover:top-[150%] duration-500 shadow-[0_0_10px_10px_rgba(0,0,0,0.3)]"></span>
                             Submit
                             </button>
+                        </div>
+                        <div className="mt-10 bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl backdrop-blur-md transition-all duration-300 ring-1 ring-cyan-500/20">
+                            <div className="max-h-[400px] overflow-y-auto pr-2 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                                <p id="textOutput"></p>
+                            </div>
                         </div>
                     </div>
                 </main>
