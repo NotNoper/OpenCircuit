@@ -1,5 +1,3 @@
-import res from "express/lib/response";
-
 function GetListData() {
     const promptEl = document.getElementById("projectPrompt");
     if (!promptEl.value) {
@@ -24,7 +22,9 @@ async function SearchDatasheetInformation(componentName) {
         const result = await response.json();
         
         const textOutput = document.getElementById("textOutput");
-        textOutput.textContent = result.result
+        const text = document.createElement('p');
+        text.innerHTML = result.result;
+        textOutput.appendChild(text);
         
     } catch (err) {
         console.error("Failed:", err);
@@ -70,8 +70,8 @@ function DatasheetsApp() {
                             </button>
                         </div>
                         <div className="mt-10 bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl backdrop-blur-md transition-all duration-300 ring-1 ring-cyan-500/20">
-                            <div className="max-h-[400px] overflow-y-auto pr-2 text-slate-300 whitespace-pre-wrap leading-relaxed">
-                                <p id="textOutput"></p>
+                            <div id="outputText" className="max-h-[400px] overflow-y-auto pr-2 text-slate-300 whitespace-pre-wrap leading-relaxed">
+                                
                             </div>
                         </div>
                     </div>

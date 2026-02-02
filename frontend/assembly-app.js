@@ -1,5 +1,3 @@
-import res from "express/lib/response";
-
 let components = [];
 
 async function FindPart(imgBase64) {
@@ -288,7 +286,6 @@ function AssemblyApp() {
                     <pre id="code" class="styled-pre"/>
                 </div>
             </main>
-
             <Footer />
         </div>
     );
