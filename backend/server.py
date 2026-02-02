@@ -112,6 +112,9 @@ def SearchDatasheetInformation():
     results = search.get_dict()
     organic_results = results.get("organic_results")
 
+    if not organic_results:
+        return {"result":"no results found", "absoluteMaximumRatings": "", "sda": "", "scl": "", "i2c": "", "currentConsumption": "", "vcc": "", "voltage": ""}
+
     link = organic_results[0].get("link")
 
     if "pdf" in link:
