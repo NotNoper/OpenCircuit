@@ -1,147 +1,303 @@
+class Circuit {
+  constructor() {
+    this.nodes = new Set([0]);
+    this.components = [];
+  }
+
+  addNode(node) {
+    this.nodes.add(node);
+  }
+
+  addComp(c) {
+    this.components.push(c);
+    this.addNode(c.n1);
+    this.addNode(c.n2);
+  }
+
+  solveDC() {
+    const nodesArray = Array.from(this.nodes).sort((a, b) => a - b);
+    const N = nodesArray.length;
+    const idx = {};
+    for (let i = 0; i < N; i++) idx[nodesArray[i]] = i;
+
+    let voltageSources = this.components.filter(c => c.type === "V");
+    let M = N - 1 + voltageSources.length;
+
+    let G = Array.from({ length: M }, () => Array(M).fill(0));
+    let I = Array(M).fill(0);
+
+    this.components.forEach(c => {
+      if (c.stamp) {
+        c.stamp(G, I, idx);
+      } else if (c.type === "R") {
+        let n1 = c.n1 === 0 ? -1 : idx[c.n1] - 1;
+        let n2 = c.n2 === 0 ? -1 : idx[c.n2] - 1;
+        let g = 1 / c.value;
+
+        if (n1 >= 0) G[n1][n1] += g;
+        if (n2 >= 0) G[n2][n2] += g;
+        if (n1 >= 0 && n2 >= 0) {
+          G[n1][n2] -= g;
+          G[n2][n1] -= g;
+        }
+      }
+    });
+
+    voltageSources.forEach((vs, k) => {
+      let row = N - 1 + k;
+      let n1 = vs.n1 === 0 ? -1 : idx[vs.n1] - 1;
+      let n2 = vs.n2 === 0 ? -1 : idx[vs.n2] - 1;
+
+      if (n1 >= 0) {
+        G[row][n1] = 1;
+        G[n1][row] = 1;
+      }
+      if (n2 >= 0) {
+        G[row][n2] = -1;
+        G[n2][row] = -1;
+      }
+      I[row] = vs.value;
+    });
+
+    let x = numeric.solve(G, I);
+
+    let voltages = {};
+    nodesArray.forEach((node, i) => {
+      voltages[node] = node === 0 ? 0 : x[i - 1];
+    });
+
+    this.components.forEach(c => {
+      if (c.computeCurrent) c.computeCurrent(voltages);
+    });
+
+    return voltages;
+  }
+}
+
+class Resistor {
+  constructor(id, n1, n2, value) {
+    this.id = id;
+    this.type = "R";
+    this.n1 = n1;
+    this.n2 = n2;
+    this.value = value;
+    this.current = 0;
+  }
+  computeCurrent(v) {
+    this.current = (v[this.n1] - v[this.n2]) / this.value;
+  }
+}
+
+class VoltageSource {
+  constructor(id, n1, n2, value) {
+    this.id = id;
+    this.type = "V";
+    this.n1 = n1;
+    this.n2 = n2;
+    this.value = value;
+  }
+}
+
+class LED {
+  constructor(id, n1, n2, Vf = 2, Rseries = 100) {
+    this.id = id;
+    this.type = "LED";
+    this.n1 = n1;
+    this.n2 = n2;
+    this.Vf = Vf;
+    this.Rseries = Rseries;
+    this.current = 0;
+  }
+
+  stamp(G, I, idx) {
+    let n1 = idx[this.n1] - 1;
+    let n2 = idx[this.n2] - 1;
+    let g = 1 / this.Rseries;
+
+    G[n1][n1] += g;
+    G[n2][n2] += g;
+    G[n1][n2] -= g;
+    G[n2][n1] -= g;
+
+    I[n1] += this.Vf / this.Rseries;
+    I[n2] -= this.Vf / this.Rseries;
+  }
+
+  computeCurrent(v) {
+    this.current = (v[this.n1] - v[this.n2] - this.Vf) / this.Rseries;
+  }
+
+  isOn() {
+    return this.current > 0.001;
+  }
+}
+
+// ====== APP ======
 function PlaygroundApp() {
-  const [components, setComponents] = React.useState([
-    { id: 1, type: "Battery", icon: "battery-charging", x: 120, y: 120, selected: false },
-    { id: 2, type: "LED", icon: "lightbulb", x: 300, y: 180, selected: false },
-    { id: 3, type: "Resistor", icon: "server", x: 200, y: 320, selected: false }
-  ]);
+  const circuitRef = React.useRef(new Circuit());
+  const c = circuitRef.current;
 
+  const [components, setComponents] = React.useState([]);
   const [draggingId, setDraggingId] = React.useState(null);
-
-  // DRAGGING
+  const [wires, setWires] = React.useState([]);
+  const [pending, setPending] = React.useState(null);
+  const nodeCounter = React.useRef(1);
+  const pinNodes = React.useRef({});
+  // Dragging
   React.useEffect(() => {
-    function onMove(e) {
+    function move(e) {
       if (!draggingId) return;
-
       setComponents(prev =>
-        prev.map(c =>
-          c.id === draggingId
-            ? { ...c, x: c.x + e.movementX, y: c.y + e.movementY }
-            : c
+        prev.map(x =>
+          x.id === draggingId
+            ? { ...x, x: x.x + e.movementX, y: x.y + e.movementY }
+            : x
         )
       );
     }
-
-    function stopDrag() {
-      setDraggingId(null);
-    }
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", stopDrag);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", stopDrag);
-    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", () => setDraggingId(null));
+    return () => window.removeEventListener("mousemove", move);
   }, [draggingId]);
 
-  function selectComponent(id) {
-    setComponents(prev =>
-      prev.map(c => ({ ...c, selected: c.id === id }))
-    );
-  }
-
   function addComponent(type) {
-    setComponents(prev => [
-      ...prev,
+    const id = Date.now();
+    setComponents(p => [
+      ...p,
       {
-        id: Date.now(),
+        id,
         type,
-        icon:
-          type === "Battery"
-            ? "battery-charging"
-            : type === "LED"
-            ? "lightbulb"
-            : "cpu",
-        x: 200,
-        y: 200,
+        icon: type === "Battery" ? "battery-charging" : type === "LED" ? "lightbulb" : "cpu",
+        x: 150 + p.length * 40,
+        y: 150 + p.length * 40,
         selected: false
       }
     ]);
   }
 
-  const selected = components.find(c => c.selected);
+  function assignNode(id, side, node) {
+    let comp = c.components.find(x => x.id === id);
+    const ui = components.find(x => x.id === id);
+
+    if (!comp) {
+      if (ui.type === "Battery") comp = new VoltageSource(id, 0, 0, 9);
+      if (ui.type === "Resistor") comp = new Resistor(id, 0, 0, 1000);
+      if (ui.type === "LED") comp = new LED(id, 0, 0, 2);
+      c.addComp(comp);
+    }
+
+    if (side === "left") comp.n1 = node;
+    else comp.n2 = node;
+
+    c.addNode(node); // <-- critical
+  }
+
+  function pinClick(id, side) {
+    const key = `${id}-${side}`;
+
+    if (!pending) {
+      setPending({ id, side });
+      return;
+    }
+
+    const keyA = `${pending.id}-${pending.side}`;
+    const keyB = key;
+
+    let nodeA = pinNodes.current[keyA];
+    let nodeB = pinNodes.current[keyB];
+
+    let node;
+
+    // If either pin already belongs to a node, reuse it
+    if (nodeA) node = nodeA;
+    else if (nodeB) node = nodeB;
+    else node = nodeCounter.current++;
+
+    pinNodes.current[keyA] = node;
+    pinNodes.current[keyB] = node;
+
+    assignNode(pending.id, pending.side, node);
+    assignNode(id, side, node);
+
+    setWires(w => [...w, { a: pending, b: { id, side } }]);
+    setPending(null);
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation activePage="playground" />
 
       <div className="flex-grow flex h-[calc(100vh-64px)]">
-        {/* TOOLBOX */}
-        <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col noselect">
-          <div className="p-4 border-b border-slate-800 font-bold text-lg">
-            Toolbox
-          </div>
-          <div className="p-4 space-y-2 overflow-y-auto flex-grow">
-            {["Battery", "Resistor", "LED", "Capacitor", "Motor", "Switch"].map(
-              item => (
-                <div
-                  key={item}
-                  className="sidebar-item"
-                  onClick={() => addComponent(item)}
-                >
-                  <div className="icon-cpu mr-3"></div>
-                  {item}
-                </div>
-              )
-            )}
-          </div>
-        </aside>
-
-        {/* CANVAS */}
-        <main className="flex-grow relative overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] noselect">
-          {components.map(comp => (
-            <div
-              key={comp.id}
-              className={`absolute component-node ${
-                comp.selected ? "border-cyan-500" : ""
-              }`}
-              style={{ left: comp.x, top: comp.y }}
-              onMouseDown={e => {
-                e.stopPropagation();
-                setDraggingId(comp.id);
-              }}
-              onClick={() => selectComponent(comp.id)}
-            >
-              <div
-                className={`icon-${comp.icon} text-3xl ${
-                  comp.selected ? "text-cyan-400" : "text-slate-300"
-                }`}
-              />
-              <span className="text-xs font-mono">{comp.type}</span>
-
-              <div className="absolute -left-1 top-1/2 w-2 h-2 bg-slate-400 rounded-full" />
-              <div className="absolute -right-1 top-1/2 w-2 h-2 bg-slate-400 rounded-full" />
+        <aside className="w-64 bg-slate-900 border-r border-slate-800 p-4 noselect">
+          {["Battery", "Resistor", "LED"].map(t => (
+            <div key={t} className="sidebar-item" onClick={() => addComponent(t)}>
+              {t}
             </div>
           ))}
+        </aside>
+
+        <main className="flex-grow relative bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] noselect">
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {wires.map((w, i) => {
+              const a = components.find(c => c.id === w.a.id);
+              const b = components.find(c => c.id === w.b.id);
+              if (!a || !b) return null;
+
+              return (
+                <line
+                  key={i}
+                  x1={a.x + (w.a.side === "left" ? 0 : 128)}
+                  y1={a.y + 64}
+                  x2={b.x + (w.b.side === "left" ? 0 : 128)}
+                  y2={b.y + 64}
+                  stroke="#22d3ee"
+                  strokeWidth="3"
+                />
+              );
+            })}
+          </svg>
+
+          {components.map(comp => {
+            const ccomp = c.components.find(x => x.id === comp.id);
+            const on = ccomp?.type === "LED" && ccomp.isOn();
+
+            return (
+              <div
+                key={comp.id}
+                className="absolute component-node"
+                style={{ left: comp.x, top: comp.y }}
+                onMouseDown={() => setDraggingId(comp.id)}
+              >
+                <div className={`icon-${comp.icon} text-3xl ${on ? "text-yellow-300" : "text-slate-300"}`} />
+                <div
+                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "left"); }}
+                  className="absolute -left-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full"
+                />
+                <div
+                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "right"); }}
+                  className="absolute -right-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full"
+                />
+              </div>
+            );
+          })}
+
+          <button
+            className="absolute bottom-6 right-6 bg-cyan-500 px-6 py-3 rounded-xl"
+            onClick={() => {
+              c.solveDC();
+              setComponents([...components]);
+            }}
+          >
+            ▶ Start Simulation
+          </button>
         </main>
 
-        {/* PROPERTIES */}
         <aside className="w-72 bg-slate-900 border-l border-slate-800 p-4 noselect">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
-            Properties
-          </h3>
-
-          {selected ? (
-            <div className="p-4 bg-slate-800 rounded-lg border border-slate-700">
-              <div className="text-xs text-cyan-400 mb-2">SELECTED</div>
-              <div className="font-bold text-lg mb-4">
-                {selected.type}
-              </div>
-
-              <div className="text-sm text-slate-400">
-                Position: ({Math.round(selected.x)}, {Math.round(selected.y)})
-              </div>
-            </div>
-          ) : (
-            <div className="text-slate-500 text-sm">
-              Click a component to edit it
-            </div>
-          )}
+          Properties
         </aside>
       </div>
     </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<PlaygroundApp />);
+ReactDOM.createRoot(document.getElementById("root")).render(<PlaygroundApp />);
