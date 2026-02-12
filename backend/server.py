@@ -101,7 +101,7 @@ def SearchDatasheetInformation():
     data = request.json
     componentToSearch = data.get('componentName')
     params = {
-        "engine": "google_light",
+        "engine": "google",
         "q": componentToSearch + " datasheet filetype:pdf",
         "google_domain": "google.com",
         "hl": "en",
