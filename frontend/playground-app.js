@@ -315,36 +315,36 @@ function PlaygroundApp() {
           </svg>
 
           {components.map(comp => {
-            const ccomp = c.components.find(x => x.id === comp.id);
-            const on = ccomp?.type === "LED" && ccomp.isOn();
+          const ccomp = c.components.find(x => x.id === comp.id);
+          const on = ccomp?.type === "LED" && ccomp.isOn();
 
-            return (
+          return (
+            <div
+              key={comp.id}
+              className="absolute component-node"
+              style={{ left: comp.x, top: comp.y }}
+              onMouseDown={() => setDraggingId(comp.id)}
+            >
+              <div className={`icon-${comp.icon} text-3xl ${on ? "text-yellow-300" : "text-slate-300"}`} />
+
+              {/* LEFT PIN */}
               <div
-                key={comp.id}
-                className="absolute component-node"
-                style={{ left: comp.x, top: comp.y }}
-                onMouseDown={() => setDraggingId(comp.id)}
+                onClick={e => { e.stopPropagation(); pinClick(comp.id, "left"); }}
+                className="absolute -left-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full flex items-center justify-center text-xs text-white"
               >
-                <div className={`icon-${comp.icon} text-3xl ${on ? "text-yellow-300" : "text-slate-300"}`} />
-
-                {/* LEFT PIN */}
-                <div
-                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "left"); }}
-                  className="absolute -left-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full flex items-center justify-center text-xs text-white"
-                >
-                  <span className="text-[10px] font-bold">{comp.type === "Battery" || comp.type === "LED" ? "+" : ""}</span>
-                </div>
-
-                {/* RIGHT PIN */}
-                <div
-                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "right"); }}
-                  className="absolute -right-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full flex items-center justify-center text-xs text-white"
-                >
-                  <span className="text-[10px] font-bold">{comp.type === "Battery" || comp.type === "LED" ? "−" : ""}</span>
-                </div>
+                <span className="text-[10px] font-bold">{comp.type === "Battery" || comp.type === "LED" ? "+" : ""}</span>
               </div>
-            );
-          })}
+
+              {/* RIGHT PIN */}
+              <div
+                onClick={e => { e.stopPropagation(); pinClick(comp.id, "right"); }}
+                className="absolute -right-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full flex items-center justify-center text-xs text-white"
+              >
+                <span className="text-[10px] font-bold">{comp.type === "Battery" || comp.type === "LED" ? "−" : ""}</span>
+              </div>
+            </div>
+          );
+        })}
 
 
           <button
