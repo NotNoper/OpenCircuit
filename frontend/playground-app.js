@@ -1,3 +1,41 @@
+function solveLinear(A, b) {
+  const n = b.length;
+
+  for (let i = 0; i < n; i++) {
+    // Pivot
+    let maxRow = i;
+    for (let k = i + 1; k < n; k++) {
+      if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) {
+        maxRow = k;
+      }
+    }
+    [A[i], A[maxRow]] = [A[maxRow], A[i]];
+    [b[i], b[maxRow]] = [b[maxRow], b[i]];
+
+    // Eliminate
+    for (let k = i + 1; k < n; k++) {
+      let c = A[k][i] / A[i][i];
+      for (let j = i; j < n; j++) {
+        A[k][j] -= c * A[i][j];
+      }
+      b[k] -= c * b[i];
+    }
+  }
+
+  // Back substitution
+  let x = Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    let sum = b[i];
+    for (let j = i + 1; j < n; j++) {
+      sum -= A[i][j] * x[j];
+    }
+    x[i] = sum / A[i][i];
+  }
+
+  return x;
+}
+
+
 class Circuit {
   constructor() {
     this.nodes = new Set([0]);
@@ -59,7 +97,7 @@ class Circuit {
       I[row] = vs.value;
     });
 
-    let x = numeric.solve(G, I);
+    let x = solveLinear(G, I);
 
     let voltages = {};
     nodesArray.forEach((node, i) => {
@@ -110,17 +148,19 @@ class LED {
   }
 
   stamp(G, I, idx) {
-    let n1 = idx[this.n1] - 1;
-    let n2 = idx[this.n2] - 1;
+    let n1 = this.n1 === 0 ? -1 : idx[this.n1] - 1;
+    let n2 = this.n2 === 0 ? -1 : idx[this.n2] - 1;
     let g = 1 / this.Rseries;
 
-    G[n1][n1] += g;
-    G[n2][n2] += g;
-    G[n1][n2] -= g;
-    G[n2][n1] -= g;
+    if (n1 >= 0) G[n1][n1] += g;
+    if (n2 >= 0) G[n2][n2] += g;
+    if (n1 >= 0 && n2 >= 0) {
+      G[n1][n2] -= g;
+      G[n2][n1] -= g;
+    }
 
-    I[n1] += this.Vf / this.Rseries;
-    I[n2] -= this.Vf / this.Rseries;
+    if (n1 >= 0) I[n1] += this.Vf / this.Rseries;
+    if (n2 >= 0) I[n2] -= this.Vf / this.Rseries;
   }
 
   computeCurrent(v) {
@@ -140,7 +180,7 @@ function PlaygroundApp() {
   const [components, setComponents] = React.useState([]);
   const [draggingId, setDraggingId] = React.useState(null);
   const [wires, setWires] = React.useState([]);
-  const [pending, setPending] = React.useState(null);
+  const [dragWire, setDragWire] = React.useState(null);
   const nodeCounter = React.useRef(1);
   const pinNodes = React.useRef({});
   // Dragging
@@ -159,6 +199,34 @@ function PlaygroundApp() {
     window.addEventListener("mouseup", () => setDraggingId(null));
     return () => window.removeEventListener("mousemove", move);
   }, [draggingId]);
+
+  React.useEffect(() => {
+  function move(e) {
+    if (!dragWire) return;
+    setDragWire(w => ({ ...w, x: e.clientX, y: e.clientY }));
+  }
+
+  function up(e) {
+    if (!dragWire) return;
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    const pin = target?.closest("[data-pin]");
+
+    if (pin) {
+      const id = Number(pin.dataset.id);
+      const side = pin.dataset.side;
+      connectPins(dragWire.from, { id, side });
+    }
+
+    setDragWire(null);
+    }
+
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    };
+  }, [dragWire]);
 
   function addComponent(type) {
     const id = Date.now();
@@ -189,26 +257,18 @@ function PlaygroundApp() {
     if (side === "left") comp.n1 = node;
     else comp.n2 = node;
 
-    c.addNode(node); // <-- critical
+    c.addNode(node);
   }
 
-  function pinClick(id, side) {
-    const key = `${id}-${side}`;
-
-    if (!pending) {
-      setPending({ id, side });
-      return;
-    }
-
-    const keyA = `${pending.id}-${pending.side}`;
-    const keyB = key;
+  function connectPins(a, b) {
+    const keyA = `${a.id}-${a.side}`;
+    const keyB = `${b.id}-${b.side}`;
 
     let nodeA = pinNodes.current[keyA];
     let nodeB = pinNodes.current[keyB];
 
     let node;
 
-    // If either pin already belongs to a node, reuse it
     if (nodeA) node = nodeA;
     else if (nodeB) node = nodeB;
     else node = nodeCounter.current++;
@@ -216,11 +276,10 @@ function PlaygroundApp() {
     pinNodes.current[keyA] = node;
     pinNodes.current[keyB] = node;
 
-    assignNode(pending.id, pending.side, node);
-    assignNode(id, side, node);
+    assignNode(a.id, a.side, node);
+    assignNode(b.id, b.side, node);
 
-    setWires(w => [...w, { a: pending, b: { id, side } }]);
-    setPending(null);
+    setWires(w => [...w, { a, b }]);
   }
 
   return (
@@ -255,6 +314,25 @@ function PlaygroundApp() {
                 />
               );
             })}
+            {dragWire && (() => {
+              const a = components.find(c => c.id === dragWire.from.id);
+              if (!a) return null;
+
+              const x1 = a.x + (dragWire.from.side === "left" ? 0 : 128);
+              const y1 = a.y + 64;
+
+              return (
+                <line
+                  x1={x1}
+                  y1={y1}
+                  x2={dragWire.x}
+                  y2={dragWire.y}
+                  stroke="#22d3ee"
+                  strokeWidth="3"
+                />
+              );
+            })()}
+
           </svg>
 
           {components.map(comp => {
@@ -270,11 +348,32 @@ function PlaygroundApp() {
               >
                 <div className={`icon-${comp.icon} text-3xl ${on ? "text-yellow-300" : "text-slate-300"}`} />
                 <div
-                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "left"); }}
+                  data-pin
+                  data-id={comp.id}
+                  data-side="left"
+                  onMouseDown={e => {
+                    e.stopPropagation();
+                    setDragWire({
+                      from: { id: comp.id, side: "left" },
+                      x: e.clientX,
+                      y: e.clientY
+                    });
+                  }}
                   className="absolute -left-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full"
                 />
+
                 <div
-                  onClick={e => { e.stopPropagation(); pinClick(comp.id, "right"); }}
+                  data-pin
+                  data-id={comp.id}
+                  data-side="right"
+                  onMouseDown={e => {
+                    e.stopPropagation();
+                    setDragWire({
+                      from: { id: comp.id, side: "right" },
+                      x: e.clientX,
+                      y: e.clientY
+                    });
+                  }}
                   className="absolute -right-1 top-1/2 w-3 h-3 bg-slate-400 rounded-full"
                 />
               </div>
