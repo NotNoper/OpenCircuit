@@ -7,6 +7,7 @@ import fitz
 from serpapi import GoogleSearch
 import requests
 #import pytesseract
+import json
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app) 
@@ -205,8 +206,8 @@ def SummarizeExtractedInfo():
         )
 
         print(response.choices[0].message.content)
-        returnedInfo = jsonify( response.choices[0].message.content)
-        return returnedInfo
+        data = json.loads(response.choices[0].message.content)
+        return jsonify(data)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

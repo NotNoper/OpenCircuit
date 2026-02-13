@@ -22,9 +22,12 @@ async function SearchDatasheetInformation(componentName) {
         const result = await response.json();
         console.log(result);
         const textOutput = document.getElementById("outputText");
-        const text = document.createElement('p');
-        text.innerHTML = result;
-        textOutput.appendChild(text);
+        textOutput.innerHTML = "";
+
+        const pre = document.createElement("pre");
+        pre.textContent = JSON.stringify(result, null, 2);
+        textOutput.appendChild(pre);
+
         
     } catch (err) {
         console.error("Failed:", err);
