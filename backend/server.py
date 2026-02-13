@@ -130,9 +130,9 @@ def SearchDatasheetInformation():
             f.write(response.content)
 
         extractPDFTextAndImages(filepath)
-        #toReturn = jsonify(SummarizeExtractedInfo())
+        toReturn = SummarizeExtractedInfo()
         os.remove(filepath)
-        return SummarizeExtractedInfo() #toReturn
+        return toReturn
 
 #def ocr_image(image_path):
 #    img = cv2.imread(image_path)
@@ -205,8 +205,8 @@ def SummarizeExtractedInfo():
         )
 
         print(response.choices[0].message.content)
-
-        return response.choices[0].message.content
+        returnedInfo = jsonify( response.choices[0].message.content)
+        return returnedInfo
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
