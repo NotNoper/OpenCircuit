@@ -102,7 +102,7 @@ def SearchDatasheetInformation():
     componentToSearch = data.get('componentName')
     params = {
         "engine": "google",
-        "q": componentToSearch + " datasheet filetype:pdf",
+        "q": "Arduino Uno R3 datasheet filetype:pdf",
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
@@ -112,7 +112,7 @@ def SearchDatasheetInformation():
     results = search.get_dict()
     organic_results = results.get("organic_results")
 
-    print(f"Search results for {componentToSearch}: {organic_results}")
+    print(f"Search results for {componentToSearch}: {organic_results}, {results}")
 
     if not organic_results:
         return {"result":"no results found", "absoluteMaximumRatings": "", "sda": "", "scl": "", "i2c": "", "currentConsumption": "", "vcc": "", "voltage": ""}
