@@ -132,7 +132,7 @@ def SearchDatasheetInformation():
         extractPDFTextAndImages(filepath)
         toReturn = SummarizeExtractedInfo()
         os.remove(filepath)
-        return toReturn
+        return jsonify(toReturn)
 
 #def ocr_image(image_path):
 #    img = cv2.imread(image_path)
