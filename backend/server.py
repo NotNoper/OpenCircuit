@@ -18,7 +18,6 @@ STATIC_FOLDER = os.path.join(os.getcwd(), "static")
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 KEYWORDS = [
     "voltage",
@@ -99,6 +98,7 @@ if __name__ == '__main__':
 
 @app.route('/search-datasheet-information', methods=['POST'])
 def SearchDatasheetInformation():
+    serpapi_api_key = os.getenv("SERPAPI_API_KEY")
     data = request.json
     componentToSearch = data.get('componentName')
     params = {
