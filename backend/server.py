@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
 import os
 from openai import OpenAI
 import fitz
@@ -8,8 +7,6 @@ import fitz
 from serpapi import GoogleSearch
 import requests
 #import pytesseract
-
-load_dotenv() 
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app) 
@@ -99,6 +96,7 @@ if __name__ == '__main__':
 @app.route('/search-datasheet-information', methods=['POST'])
 def SearchDatasheetInformation():
     serpapi_api_key = os.getenv("SERPAPI_API_KEY")
+    print(serpapi_api_key)
     data = request.json
     componentToSearch = data.get('componentName')
     params = {
@@ -113,7 +111,7 @@ def SearchDatasheetInformation():
     results = search.get_dict()
     organic_results = results.get("organic_results")
 
-    print(f"Search results for {componentToSearch}: {organic_results}, {results}")
+    #print(f"Search results for {componentToSearch}: {organic_results}, {results}")
 
     if not organic_results:
         return {"result":"no results found", "absoluteMaximumRatings": "", "sda": "", "scl": "", "i2c": "", "currentConsumption": "", "vcc": "", "voltage": ""}
