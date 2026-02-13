@@ -18,6 +18,7 @@ STATIC_FOLDER = os.path.join(os.getcwd(), "static")
 os.makedirs(STATIC_FOLDER, exist_ok=True)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 KEYWORDS = [
     "voltage",
@@ -106,7 +107,7 @@ def SearchDatasheetInformation():
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
-        "api_key": os.getenv("SERPAPI_API_KEY")
+        "api_key": serpapi_api_key
     }
     search = GoogleSearch(params)
     results = search.get_dict()
