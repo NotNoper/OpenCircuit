@@ -101,7 +101,7 @@ def SearchDatasheetInformation():
     componentToSearch = data.get('componentName')
     params = {
         "engine": "google",
-        "q": "Arduino Uno R3 datasheet filetype:pdf",
+        "q": f"{componentToSearch} datasheet filetype:pdf",
         "google_domain": "google.com",
         "hl": "en",
         "gl": "us",
@@ -110,8 +110,6 @@ def SearchDatasheetInformation():
     search = GoogleSearch(params)
     results = search.get_dict()
     organic_results = results.get("organic_results")
-
-    #print(f"Search results for {componentToSearch}: {organic_results}, {results}")
 
     if not organic_results:
         return {"result":"no results found", "absoluteMaximumRatings": "", "sda": "", "scl": "", "i2c": "", "currentConsumption": "", "vcc": "", "voltage": ""}
@@ -132,9 +130,9 @@ def SearchDatasheetInformation():
             f.write(response.content)
 
         extractPDFTextAndImages(filepath)
-        toReturn = jsonify(SummarizeExtractedInfo())
+        #toReturn = jsonify(SummarizeExtractedInfo())
         os.remove(filepath)
-        return toReturn
+        return SummarizeExtractedInfo() #toReturn
 
 #def ocr_image(image_path):
 #    img = cv2.imread(image_path)
