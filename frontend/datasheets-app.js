@@ -19,7 +19,7 @@ async function SearchDatasheetInformation(componentName) {
             }
         );
 
-        const result = await response;
+        const result = await response.json();
         console.log(result);
         const textOutput = document.getElementById("outputText");
         const text = document.createElement('p');
