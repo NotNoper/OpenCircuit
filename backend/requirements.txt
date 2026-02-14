@@ -6,3 +6,5 @@ gunicorn
 requests
 google-search-results
 PyMuPDF
+hashlib
+sqlite3

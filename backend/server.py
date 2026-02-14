@@ -8,6 +8,8 @@ from serpapi import GoogleSearch
 import requests
 #import pytesseract
 import json
+import sqlite3
+import hashlib
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app) 
@@ -27,6 +29,19 @@ KEYWORDS = [
     "sda",
     "absolute maximum ratings"
 ]
+
+conn = sqlite3.connect("/var/data/users.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    salt BLOB NOT NULL,
+    hashed_password BLOB NOT NULL
+)
+""")
+conn.commit()
 
 @app.route('/upload-image', methods=['POST'])
 def upload_image():
@@ -211,3 +226,54 @@ def SummarizeExtractedInfo():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+def generate_salt():
+    return os.urandom(16)
+
+def hash_password(password, salt):
+    return hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+
+def verify_password(stored_hash, stored_salt, password_attempt):
+    attempt_hash = hash_password(password_attempt, stored_salt)
+    return attempt_hash == stored_hash
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+    if cursor.fetchone():
+        print("Error: Email already registered.")
+        return None
+    
+    salt = generate_salt()
+    hashed_password = hash_password(password, salt)
+    cursor.execute(
+        "INSERT INTO users (email, salt, hashed_password) VALUES (?, ?, ?)",
+        (email, salt, hashed_password)
+    )
+    conn.commit()
+    print(f"User {email} registered successfully!")
+    return email
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    cursor.execute("SELECT salt, hashed_password FROM users WHERE email = ?", (email,))
+    row = cursor.fetchone()
+    if not row:
+        print("Error: No account with that email.")
+        return None
+    
+    salt, stored_hash = row
+    if verify_password(stored_hash, salt, password):
+        print(f"Login successful for {email}!")
+        return email  
+    else:
+        print("Error: Incorrect password.")
+        return None

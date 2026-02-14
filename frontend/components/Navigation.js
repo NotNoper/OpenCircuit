@@ -1,10 +1,31 @@
+import { user } from "./global";
+
 function Navigation({ activePage }) {
-    const links = [
+    let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
         { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
         { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
         { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
     ];
+
+    if(user === null)
+    {
+        let links = [
+            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
+            { name: 'Playground', href: 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
+            { name: 'Assembly', href: 'unlogged.html', id: 'assembly', icon: 'camera' },
+            { name: 'Datasheets', href: 'unlogged.html', id: 'datasheets', icon: 'file-text' },
+        ];
+    }
+    else
+    {
+        let links = [
+            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
+            { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
+            { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
+            { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
+        ];
+    }
 
     return (
         <>
@@ -35,12 +56,13 @@ function Navigation({ activePage }) {
                     </div>
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
-                        <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>
+                        {user===null && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
                        
-                        <a href = "signup.html" className="bubbles bubbles-small ml-auto">
+                        {user===null && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
                             <span className="text">Sign up</span>
-                        </a>
+                        </a>}
                         
+                        {user && <p>{user}</p>}
                     </div>
                 </div>
             </nav>

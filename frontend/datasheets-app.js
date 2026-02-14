@@ -1,3 +1,5 @@
+import { user } from "./global";
+
 function GetListData() {
     const promptEl = document.getElementById("projectPrompt");
     if (!promptEl.value) {
@@ -20,7 +22,6 @@ async function SearchDatasheetInformation(componentName) {
         );
 
         const result = await response.json();
-        console.log(result);
         const textOutput = document.getElementById("outputText");
         textOutput.innerHTML = "";
 

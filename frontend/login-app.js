@@ -1,3 +1,31 @@
+import { user } from "./global";
+
+async function Login() {
+    try {
+        const response = await fetch(
+            "https://nikovision.onrender.com/login",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            }
+        );
+
+        const result = await response.json(); 
+        if(result == null ) {
+            alert("Email or Password is wrong");
+        }
+        else
+        {
+            user = result;
+            window.location.href = 'index.html';
+        }
+    } catch (err) {
+        console.error("Failed:", err);
+        alert("Failed.");
+    }
+}
+
 function LoginApp() {
     try {
         const [email, setEmail] = React.useState('');
@@ -6,7 +34,6 @@ function LoginApp() {
         const handleLogin = (e) => {
             e.preventDefault();
             console.log('Logging in with:', email);
-            // Simulate login success for demo
             alert('Simulation: Login successful!');
             window.location.href = 'index.html';
         };
@@ -16,7 +43,6 @@ function LoginApp() {
                 <Navigation activePage="login" />
                 
                 <main className="flex-grow flex items-center justify-center px-4 py-16 relative overflow-hidden">
-                    {/* Background decorations */}
                     <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
                     <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 

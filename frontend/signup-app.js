@@ -1,3 +1,21 @@
+async function Signup() {
+    try {
+        const response = await fetch(
+            "https://nikovision.onrender.com/signup",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            }
+        );
+
+        window.location.href = 'login.html';
+    } catch (err) {
+        console.error("Failed:", err);
+        alert("Failed.");
+    }
+}
+
 function SignupApp() {
     try {
         const [fullName, setFullName] = React.useState('');
@@ -7,9 +25,7 @@ function SignupApp() {
         const handleSignup = (e) => {
             e.preventDefault();
             console.log('Signing up with:', { fullName, email });
-            // Simulate signup success
-            alert('Simulation: Account created successfully!');
-            window.location.href = 'index.html';
+            SignupApp();
         };
 
         return (
