@@ -261,19 +261,24 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    emailOne = data.get('email')
+    email_input = data.get('email')
     password = data.get('password')
 
-    cursor.execute("SELECT salt, hashed_password FROM users WHERE email = ?", (email,))
+    cursor.execute(
+        "SELECT email, salt, hashed_password FROM users WHERE email = ?", 
+        (email_input,)
+    )
     row = cursor.fetchone()
+
     if not row:
         print("Error: No account with that email.")
         return None
-    
-    email, salt, stored_hash = row
-    if verify_password(stored_hash, salt, password) and emailOne == email:
-        print(f"Login successful for {email}!")
-        return email  
+
+    db_email, salt, stored_hash = row
+
+    if db_email == email_input and verify_password(stored_hash, salt, password):
+        print(f"Login successful for {db_email}!")
+        return db_email
     else:
-        print("Error: Incorrect password.")
+        print("Error: Incorrect email or password.")
         return None
