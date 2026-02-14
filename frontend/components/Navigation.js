@@ -35,13 +35,12 @@ function Navigation({ activePage }) {
                     </div>
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
-                        {user===null && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
+                        <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>
                        
-                        {user===null && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
+                        <a href = "signup.html" className="bubbles bubbles-small ml-auto">
                             <span className="text">Sign up</span>
-                        </a>}
+                        </a>
                         
-                        {user && <p>{user}</p>}
                     </div>
                 </div>
             </nav>
