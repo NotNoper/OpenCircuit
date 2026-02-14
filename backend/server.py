@@ -261,7 +261,7 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    email = data.get('email')
+    emailOne = data.get('email')
     password = data.get('password')
 
     cursor.execute("SELECT salt, hashed_password FROM users WHERE email = ?", (email,))
@@ -270,8 +270,8 @@ def login():
         print("Error: No account with that email.")
         return None
     
-    salt, stored_hash = row
-    if verify_password(stored_hash, salt, password):
+    email, salt, stored_hash = row
+    if verify_password(stored_hash, salt, password) and emailOne == email:
         print(f"Login successful for {email}!")
         return email  
     else:
