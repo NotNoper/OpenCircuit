@@ -16,7 +16,7 @@ async function Login(email, password) {
         }
         else
         {
-            alert("Loggin in!");
+            localStorage.setItem("loggedInEmail", result);
             window.location.href = 'index.html';
         }
     } catch (err) {

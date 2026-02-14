@@ -24,7 +24,7 @@ class ErrorBoundary extends React.Component {
               onClick={() => window.location.reload()}
               className="btn btn-primary"
             >
-              Reboot System
+              Reload Page
             </button>
           </div>
         </div>

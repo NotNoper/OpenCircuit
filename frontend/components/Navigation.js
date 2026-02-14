@@ -1,9 +1,10 @@
 function Navigation({ activePage }) {
+    const loggedInEmail = localStorage.getItem("loggedInEmail");
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-        { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
-        { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
-        { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
+        { name: 'Playground', href: loggedInEmail ? 'playground.html':null, id: 'playground', icon: 'gamepad-2' },
+        { name: 'Assembly', href: loggedInEmail ? 'assembly.html':null, id: 'assembly', icon: 'camera' },
+        { name: 'Datasheets', href: loggedInEmail ? 'datasheets.html':null, id: 'datasheets', icon: 'file-text' },
     ];
 
     return (
@@ -35,11 +36,13 @@ function Navigation({ activePage }) {
                     </div>
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
-                        <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>
+                        {!loggedInEmail && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
                        
-                        <a href = "signup.html" className="bubbles bubbles-small ml-auto">
+                        {!loggedInEmail && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
                             <span className="text">Sign up</span>
-                        </a>
+                        </a>}
+
+                        {loggedInEmail && <p>{loggedInEmail}</p>}
                         
                     </div>
                 </div>
