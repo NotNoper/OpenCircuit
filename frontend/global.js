@@ -1,1 +1,3 @@
-export let user = "";
+export const globalState = {
+  user: ""
+};
