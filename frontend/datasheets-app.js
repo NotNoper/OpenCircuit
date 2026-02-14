@@ -1,5 +1,3 @@
-import { user } from "./UserContext";
-
 function GetListData() {
     const promptEl = document.getElementById("projectPrompt");
     if (!promptEl.value) {
