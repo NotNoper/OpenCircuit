@@ -246,7 +246,7 @@ def signup():
     cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
     if cursor.fetchone():
         print("Error: Email already registered.")
-        return None
+        return {"email": "", "error": "Email already registered."}
     
     salt = generate_salt()
     hashed_password = hash_password(password, salt)
@@ -256,7 +256,7 @@ def signup():
     )
     conn.commit()
     print(f"User {email} registered successfully!")
-    return email
+    return {"email": email, "error": ""}
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -272,13 +272,13 @@ def login():
 
     if not row:
         print("Error: No account with that email.")
-        return None
+        return {"email": "", "error": "No account with that email."}
 
     db_email, salt, stored_hash = row
 
     if db_email == email_input and verify_password(stored_hash, salt, password):
         print(f"Login successful for {db_email}!")
-        return db_email
+        return {"email": db_email, "error": ""}
     else:
         print("Error: Incorrect email or password.")
-        return None
+        return {"email": "", "error": "Incorrect email or password."}

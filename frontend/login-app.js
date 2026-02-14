@@ -9,14 +9,14 @@ async function Login(email, password) {
             }
         );
 
-        const result = await response.text(); 
+        const result = await response.json(); 
         console.log(result);
-        if(result == null ) {
-            alert("Email or Password is wrong");
+        if(result.error != "") {
+            alert(result.error);
         }
         else
         {
-            localStorage.setItem("loggedInEmail", result);
+            localStorage.setItem("loggedInEmail", result.email);
             window.location.href = 'index.html';
         }
     } catch (err) {

@@ -7,8 +7,14 @@ async function Signup({ email, password }) {
         });
 
         if (!response.ok) throw new Error("Signup failed");
-        
-        window.location.href = "login.html";
+        if(response.error != "")
+        {
+            window.location.href = "login.html";
+        }
+        else
+        {
+            alert(response.error);
+        }
     } catch (err) {
         console.error("Failed:", err);
         alert("Signup failed. Try again.");
