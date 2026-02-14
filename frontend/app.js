@@ -1,15 +1,23 @@
-const { createContext, useState, useContext } = React;
+const { createContext, useState, useContext, useEffect } = React;
 
 const UserContext = createContext(null);
 
 function UserProvider({ children }) {
-  const [user, setUser] = useState(null); // null or string
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    window.user = user;
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
+}
+
+function useUser() {
+  return useContext(UserContext);
 }
 
 class ErrorBoundary extends React.Component {

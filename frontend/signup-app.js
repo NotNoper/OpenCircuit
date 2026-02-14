@@ -1,18 +1,17 @@
-async function Signup() {
+async function Signup({ fullName, email, password }) {
     try {
-        const response = await fetch(
-            "https://nikovision.onrender.com/signup",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
-            }
-        );
+        const response = await fetch("https://nikovision.onrender.com/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fullName, email, password }),
+        });
 
-        window.location.href = 'login.html';
+        if (!response.ok) throw new Error("Signup failed");
+
+        window.location.href = "login.html";
     } catch (err) {
         console.error("Failed:", err);
-        alert("Failed.");
+        alert("Signup failed. Try again.");
     }
 }
 
@@ -24,8 +23,8 @@ function SignupApp() {
 
         const handleSignup = (e) => {
             e.preventDefault();
-            console.log('Signing up with:', { fullName, email });
-            SignupApp();
+            console.log('Signing up with:', { fullName, email, password });
+            Signup({ fullName, email, password });
         };
 
         return (

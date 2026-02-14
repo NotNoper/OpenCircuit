@@ -240,6 +240,7 @@ def verify_password(stored_hash, stored_salt, password_attempt):
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
+    full_name = data.get('fullName')
     email = data.get('email')
     password = data.get('password')
 
@@ -247,16 +248,17 @@ def signup():
     if cursor.fetchone():
         print("Error: Email already registered.")
         return None
-    
+
     salt = generate_salt()
     hashed_password = hash_password(password, salt)
+
     cursor.execute(
-        "INSERT INTO users (email, salt, hashed_password) VALUES (?, ?, ?)",
-        (email, salt, hashed_password)
+        "INSERT INTO users (full_name, email, salt, hashed_password) VALUES (?, ?, ?, ?)",
+        (full_name, email, salt, hashed_password)
     )
     conn.commit()
-    print(f"User {email} registered successfully!")
-    return email
+    print(f"User {full_name} registered successfully!")
+    return full_name
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -264,16 +266,16 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    cursor.execute("SELECT salt, hashed_password FROM users WHERE email = ?", (email,))
+    cursor.execute("SELECT full_name, salt, hashed_password FROM users WHERE email = ?", (email,))
     row = cursor.fetchone()
     if not row:
         print("Error: No account with that email.")
         return None
-    
-    salt, stored_hash = row
+
+    full_name, salt, stored_hash = row
     if verify_password(stored_hash, salt, password):
-        print(f"Login successful for {email}!")
-        return email  
+        print(f"Login successful for {full_name}!")
+        return full_name
     else:
         print("Error: Incorrect password.")
         return None
