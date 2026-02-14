@@ -1,11 +1,11 @@
-async function Login() {
+async function Login(email, password) {
     try {
         const response = await fetch(
             "https://nikovision.onrender.com/login",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email, password }),
             }
         );
 
@@ -33,7 +33,7 @@ function LoginApp() {
         const handleLogin = (e) => {
             e.preventDefault();
             console.log('Logging in with:', email);
-            Login();
+            Login(email, password);
         };
 
         return (
