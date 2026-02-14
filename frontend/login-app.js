@@ -86,21 +86,7 @@ function LoginApp() {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between text-sm">
-                            <div className="flex items-center gap-2 text-slate-400 hover:text-white cursor-pointer">
-                                <div className="content">
-                                    <label className="checkBox">
-                                        <input id="ch1" type="checkbox" />
-                                        <div className="transition"></div>
-                                    </label>
-                                </div>
-                                <label htmlFor="ch1">Remember me</label>
-                            </div>
-
-                            <a href="#" className="text-cyan-400 hover:text-cyan-300">
-                                Forgot password?
-                            </a>
-                        </div>
+                        
 
                         <style>{`
                             .checkBox {
