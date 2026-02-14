@@ -11,14 +11,13 @@ async function Login(email, password) {
 
         const result = await response.json(); 
         console.log(result);
-        if(result.error != "") {
-            alert(result.error);
+        if (!response.ok) {
+            alert(result.error || "Login failed");
+            return;
         }
-        else if(result.email != "")
-        {
-            localStorage.setItem("loggedInEmail", result.email);
-            window.location.href = 'index.html';
-        }
+
+        localStorage.setItem("loggedInEmail", result.email);
+        window.location.href = "index.html";
     } catch (err) {
         console.error("Failed:", err);
         alert("Failed.");

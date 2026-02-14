@@ -271,14 +271,11 @@ def login():
     row = cursor.fetchone()
 
     if not row:
-        print("Error: No account with that email.")
-        return {"email": "", "error": "No account with that email."}
+        return jsonify({"error": "No account with that email"}), 404
 
     db_email, salt, stored_hash = row
 
-    if db_email == email_input and verify_password(stored_hash, salt, password):
-        print(f"Login successful for {db_email}!")
-        return {"email": db_email, "error": ""}
+    if verify_password(stored_hash, salt, password):
+        return jsonify({"email": db_email}), 200
     else:
-        print("Error: Incorrect email or password.")
-        return {"email": "", "error": "Incorrect email or password."}
+        return jsonify({"error": "Incorrect email or password"}), 401
