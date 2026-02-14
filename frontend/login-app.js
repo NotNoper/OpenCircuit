@@ -1,6 +1,5 @@
 async function Login() {
     try {
-        const { user, setUser } = React.useContext(UserContext);
         const response = await fetch(
             "https://nikovision.onrender.com/login",
             {
