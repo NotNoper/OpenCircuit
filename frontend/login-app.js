@@ -1,29 +1,26 @@
 import { globalState } from "./global";
 
 async function Login() {
-    try {
-        const response = await fetch(
-            "https://nikovision.onrender.com/login",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
-            }
-        );
+  try {
+    const response = await fetch("https://nikovision.onrender.com/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
 
-        const result = await response.json(); 
-        if(result == null ) {
-            alert("Email or Password is wrong");
-        }
-        else
-        {
-            globalState.user = result;
-            window.location.href = 'index.html';
-        }
-    } catch (err) {
-        console.error("Failed:", err);
-        alert("Failed.");
+    const result = await response.json();
+
+    if (result == null) {
+      alert("Email or Password is wrong");
+    } else {
+      globalState.user = result;
+      localStorage.setItem("user", result);
+      window.location.href = "index.html";
     }
+  } catch (err) {
+    console.error("Failed:", err);
+    alert("Failed.");
+  }
 }
 
 function LoginApp() {
