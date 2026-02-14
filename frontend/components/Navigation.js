@@ -1,4 +1,4 @@
-import { user } from "./global";
+import { globalState } from "./global";
 
 function Navigation({ activePage }) {
     let links = [
@@ -8,9 +8,9 @@ function Navigation({ activePage }) {
         { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
     ];
 
-    if(user === null)
+    if(globalState.user === null)
     {
-        let links = [
+        links = [
             { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
             { name: 'Playground', href: 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
             { name: 'Assembly', href: 'unlogged.html', id: 'assembly', icon: 'camera' },
@@ -19,7 +19,7 @@ function Navigation({ activePage }) {
     }
     else
     {
-        let links = [
+        links = [
             { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
             { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
             { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
