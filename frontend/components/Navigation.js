@@ -1,31 +1,12 @@
-import { globalState } from "./global";
+import { globalState } from "../global.js";
 
 function Navigation({ activePage }) {
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-        { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
-        { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
-        { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
+        { name: 'Playground', href: globalState.user ? 'playground.html' : 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
+        { name: 'Assembly', href: globalState.user ? 'assembly.html' : 'unlogged.html', id: 'assembly', icon: 'camera' },
+        { name: 'Datasheets', href: globalState.user ? 'datasheets.html' : 'unlogged.html', id: 'datasheets', icon: 'file-text' },
     ];
-
-    if(globalState.user === null)
-    {
-        links = [
-            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-            { name: 'Playground', href: 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
-            { name: 'Assembly', href: 'unlogged.html', id: 'assembly', icon: 'camera' },
-            { name: 'Datasheets', href: 'unlogged.html', id: 'datasheets', icon: 'file-text' },
-        ];
-    }
-    else
-    {
-        links = [
-            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-            { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
-            { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
-            { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
-        ];
-    }
 
     return (
         <>

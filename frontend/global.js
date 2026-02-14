@@ -1,3 +1,3 @@
 export const globalState = {
-  user: ""
+  user: null
 };

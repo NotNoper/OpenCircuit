@@ -1,4 +1,4 @@
-import { globalState } from "./global";
+import { globalState } from "./global.js";
 
 async function Login() {
     try {
