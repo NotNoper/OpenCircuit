@@ -1,25 +1,3 @@
-const { createContext, useState, useContext, useEffect } = React;
-
-const UserContext = createContext(null);
-
-function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    window.user = user;
-  }, [user]);
-
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
-}
-
-function useUser() {
-  return useContext(UserContext);
-}
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -132,8 +110,6 @@ function LandingPage() {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ErrorBoundary>
-    <UserProvider>
-      <LandingPage />
-    </UserProvider>
+    <LandingPage />
   </ErrorBoundary>
 );

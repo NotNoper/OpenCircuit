@@ -1,13 +1,13 @@
-async function Signup({ fullName, email, password }) {
+async function Signup({ email, password }) {
     try {
         const response = await fetch("https://nikovision.onrender.com/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fullName, email, password }),
+            body: JSON.stringify({ email, password }),
         });
 
         if (!response.ok) throw new Error("Signup failed");
-
+        
         window.location.href = "login.html";
     } catch (err) {
         console.error("Failed:", err);
@@ -17,14 +17,13 @@ async function Signup({ fullName, email, password }) {
 
 function SignupApp() {
     try {
-        const [fullName, setFullName] = React.useState('');
         const [email, setEmail] = React.useState('');
         const [password, setPassword] = React.useState('');
 
         const handleSignup = (e) => {
             e.preventDefault();
-            console.log('Signing up with:', { fullName, email, password });
-            Signup({ fullName, email, password });
+            console.log('Signing up with:', { email, password });
+            Signup({ email, password });
         };
 
         return (
@@ -51,14 +50,6 @@ function SignupApp() {
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <div className="icon-user text-slate-500"></div>
                                     </div>
-                                    <input 
-                                        type="text" 
-                                        className="input-field pl-10" 
-                                        placeholder="John Doe"
-                                        value={fullName}
-                                        onChange={(e) => setFullName(e.target.value)}
-                                        required
-                                    />
                                 </div>
                             </div>
 
