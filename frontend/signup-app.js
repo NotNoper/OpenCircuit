@@ -45,15 +45,6 @@ function SignupApp() {
 
                         <form onSubmit={handleSignup} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <div className="icon-user text-slate-500"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
