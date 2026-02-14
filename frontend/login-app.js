@@ -14,7 +14,7 @@ async function Login(email, password) {
         if(result.error != "") {
             alert(result.error);
         }
-        else
+        else if(result.email != "")
         {
             localStorage.setItem("loggedInEmail", result.email);
             window.location.href = 'index.html';
