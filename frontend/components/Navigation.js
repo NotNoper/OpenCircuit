@@ -1,12 +1,30 @@
-import { globalState } from "../global.js";
-
 function Navigation({ activePage }) {
+    const { user, setUser } = React.useContext(UserContext);
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-        { name: 'Playground', href: globalState.user ? 'playground.html' : 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
-        { name: 'Assembly', href: globalState.user ? 'assembly.html' : 'unlogged.html', id: 'assembly', icon: 'camera' },
-        { name: 'Datasheets', href: globalState.user ? 'datasheets.html' : 'unlogged.html', id: 'datasheets', icon: 'file-text' },
+        { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
+        { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
+        { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
     ];
+
+    if(user === null)
+    {
+        links = [
+            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
+            { name: 'Playground', href: 'unlogged.html', id: 'playground', icon: 'gamepad-2' },
+            { name: 'Assembly', href: 'unlogged.html', id: 'assembly', icon: 'camera' },
+            { name: 'Datasheets', href: 'unlogged.html', id: 'datasheets', icon: 'file-text' },
+        ];
+    }
+    else
+    {
+        links = [
+            { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
+            { name: 'Playground', href: 'playground.html', id: 'playground', icon: 'gamepad-2' },
+            { name: 'Assembly', href: 'assembly.html', id: 'assembly', icon: 'camera' },
+            { name: 'Datasheets', href: 'datasheets.html', id: 'datasheets', icon: 'file-text' },
+        ];
+    }
 
     return (
         <>
@@ -37,13 +55,13 @@ function Navigation({ activePage }) {
                     </div>
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
-                        {globalState.user===null && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
+                        {user===null && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
                        
-                        {globalState.user===null && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
+                        {user===null && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
                             <span className="text">Sign up</span>
                         </a>}
                         
-                        {globalState.user && <p>{globalState.user}</p>}
+                        {user && <p>{user}</p>}
                     </div>
                 </div>
             </nav>

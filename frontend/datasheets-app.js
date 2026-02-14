@@ -1,4 +1,4 @@
-import { user } from "./global";
+import { user } from "./UserContext";
 
 function GetListData() {
     const promptEl = document.getElementById("projectPrompt");

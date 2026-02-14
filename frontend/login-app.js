@@ -1,7 +1,6 @@
-import { globalState } from "./global.js";
-
 async function Login() {
     try {
+        const { user, setUser } = React.useContext(UserContext);
         const response = await fetch(
             "https://nikovision.onrender.com/login",
             {
@@ -12,12 +11,13 @@ async function Login() {
         );
 
         const result = await response.json(); 
+        console.log(result);
         if(result == null ) {
             alert("Email or Password is wrong");
         }
         else
         {
-            globalState.user = result;
+            setUser(result);
             window.location.href = 'index.html';
         }
     } catch (err) {
