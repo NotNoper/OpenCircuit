@@ -243,7 +243,7 @@ def signup():
     email = data.get('email')
     password = data.get('password')
 
-    cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+    cursor.execute("SELECT * FROM users WHERE email = ?", (emailOne,))
     if cursor.fetchone():
         print("Error: Email already registered.")
         return None
