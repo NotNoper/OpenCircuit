@@ -1,4 +1,4 @@
-import { user } from "./global";
+import { globalState } from "./global";
 
 async function Login() {
     try {
@@ -17,7 +17,7 @@ async function Login() {
         }
         else
         {
-            user = result;
+            globalState.user = result;
             window.location.href = 'index.html';
         }
     } catch (err) {
