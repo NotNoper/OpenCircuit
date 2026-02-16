@@ -1,5 +1,5 @@
 function Navigation({ activePage }) {
-    const loggedInEmail = localStorage.getItem("loggedInEmail");
+    const loggedInEmail = sessionStorage.getItem("loggedInEmail");
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
         { name: 'Playground', href: loggedInEmail ? 'playground.html':null, id: 'playground', icon: 'gamepad-2' },

@@ -16,7 +16,7 @@ async function Login(email, password) {
             return;
         }
 
-        localStorage.setItem("loggedInEmail", result.email);
+        sessionStorage.setItem("loggedInEmail", result.email);
         window.location.href = "index.html";
     } catch (err) {
         console.error("Failed:", err);
