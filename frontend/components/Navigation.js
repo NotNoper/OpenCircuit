@@ -1,4 +1,4 @@
-function Navigation({ activePage }) {
+function Navigation({ activePage, theme, setTheme }) {
     const loggedInEmail = sessionStorage.getItem("loggedInEmail");
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
@@ -33,9 +33,22 @@ function Navigation({ activePage }) {
                                 {link.name}
                             </a>
                         ))}
+
+                        
+                    </div>
+                    <div className = "flex items-center gap-4 ml-auto btn-secondary">
+                        <button
+                            onClick={() =>
+                                setTheme(prev => (prev === "dark" ? "light" : "dark"))
+                            }
+                            className="btn btn-secondary"
+                            >
+                            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                        </button>
                     </div>
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
+                        
                         {!loggedInEmail && <a href="login.html" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Log In</a>}
                        
                         {!loggedInEmail && <a href = "signup.html" className="bubbles bubbles-small ml-auto">
@@ -45,6 +58,7 @@ function Navigation({ activePage }) {
                         {loggedInEmail && <p>{loggedInEmail}</p>}
                         
                     </div>
+                    
                 </div>
             </nav>
             <style>{`
