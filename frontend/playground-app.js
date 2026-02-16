@@ -102,10 +102,6 @@ class Circuit {
       // Eliminate
       for (let k = i + 1; k < n; k++) {
         const factor = M[k][i] / M[i][i];
-        if (Math.abs(M[i][i]) < 1e-12) {
-          alert("Singular matrix — check circuit connections.");
-          return Array(n).fill(0);
-        }
         for (let j = i; j < n; j++) M[k][j] -= factor * M[i][j];
         B[k] -= factor * B[i];
       }
