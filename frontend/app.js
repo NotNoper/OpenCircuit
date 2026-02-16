@@ -1,13 +1,3 @@
-const getInitialTheme = () => {
-  const saved = localStorage.getItem("theme");
-  if (saved) return saved;
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-};
-
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -46,25 +36,13 @@ class ErrorBoundary extends React.Component {
 }
 
 function LandingPage() {
-  const [theme, setTheme] = React.useState(getInitialTheme);
-
-  React.useEffect(() => {
-    const root = document.documentElement;
-
-    root.classList.toggle("light", theme === "light");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
     try {
         return (
             <div className="min-h-screen flex flex-col relative overflow-x-hidden" data-name="landing-page" data-file="app.js">
                 {/* Background Decoration */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.05] pointer-events-none z-0"></div>
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[var(--primary-color)] opacity-[0.03] blur-[120px] rounded-full pointer-events-none z-0"></div>
-                <Navigation 
-                  activePage="home" 
-                  theme={theme}
-                  setTheme={setTheme}
-                />
+                <Navigation activePage="home" />
                 <main className="flex-grow relative z-10">
                     <Hero />
                     <section id="features" className="py-24 px-6 container mx-auto">

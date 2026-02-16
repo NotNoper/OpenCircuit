@@ -1,4 +1,4 @@
-function Navigation({ activePage, theme, setTheme }) {
+function Navigation({ activePage }) {
     const loggedInEmail = sessionStorage.getItem("loggedInEmail");
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
@@ -36,16 +36,7 @@ function Navigation({ activePage, theme, setTheme }) {
 
                         
                     </div>
-                    <div className = "flex items-center gap-4 ml-auto btn-secondary">
-                        <button
-                            onClick={() =>
-                                setTheme(prev => (prev === "dark" ? "light" : "dark"))
-                            }
-                            className="btn btn-secondary"
-                            >
-                            {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                        </button>
-                    </div>
+                    
                     {/* Buttons */}
                     <div className="flex items-center gap-4 ml-auto">
                         

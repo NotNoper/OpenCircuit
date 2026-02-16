@@ -1,3 +1,30 @@
+const getInitialTheme = () => {
+  const saved = localStorage.getItem("theme");
+  if (saved) return saved;
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+function useTheme() {
+  const [theme, setTheme] = React.useState(getInitialTheme);
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+
+    if (theme === "light") {
+      root.classList.add("light");
+    } else {
+      root.classList.remove("light");
+    }
+
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  return [theme, setTheme];
+}
+
 async function Signup({ email, password }) {
     try {
         const response = await fetch("https://nikovision.onrender.com/signup", {
@@ -41,7 +68,11 @@ function SignupApp() {
 
         return (
             <div className="min-h-screen flex flex-col" data-name="signup-app">
-                <Navigation activePage="signup" />
+                <Navigation 
+                    activePage="signup" 
+                    theme={localStorage.getItem("theme")}
+                    setTheme={useTheme}
+                />
                 
                 <main className="flex-grow flex items-center justify-center px-4 py-12 relative overflow-hidden">
                     {/* Background decorations */}
