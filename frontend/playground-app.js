@@ -130,7 +130,9 @@ class Resistor {
     this.current = 0;
   }
   computeCurrent(v) {
-    this.current = (v[this.n1] - v[this.n2]) / this.value;
+    const v1 = v[this.n1] ?? 0;
+    const v2 = v[this.n2] ?? 0;
+    this.current = (v1 - v2) / this.value;
   }
 }
 
@@ -139,7 +141,7 @@ class VoltageSource {
     this.id = id;
     this.type = "V";
     this.n1 = n1;
-    this.n2 = 0;
+    this.n2 = n2;
     this.value = value;
   }
 }
@@ -172,7 +174,9 @@ class LED {
   }
 
   computeCurrent(v) {
-    this.current = (v[this.n1] - v[this.n2] - this.Vf) / this.Rseries;
+    const v1 = v[this.n1] ?? 0;
+    const v2 = v[this.n2] ?? 0;
+    this.current = (v1 - v2 - this.Vf) / this.Rseries;
   }
 
   isOn() {
@@ -369,7 +373,7 @@ function PlaygroundApp() {
                   }
                 });
 
-                freshCircuit.addComp(comp);
+                if (comp) freshCircuit.addComp(comp);
               });
 
               freshCircuit.solveDC();
