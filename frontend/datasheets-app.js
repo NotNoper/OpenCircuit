@@ -99,16 +99,15 @@ function DatasheetsApp() {
                             />
                         </div>
 
-                        <div className="flex justify-center mb-10">
+                        <div className="flex justify-center">
                             <button
-                                onClick={handleSearch}
-                                className="btn btn-primary rounded-xl px-6 py-3"
-                            >
-                                {loading ? "Searching..." : "Search"}
+                                class="bg-sky-950 text-sky-400 border border-sky-400 border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group"
+                                onClick={() => handleSearch()}>
+                            <span class="bg-sky-400 shadow-sky-400 absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 group-hover:top-[150%] duration-500 shadow-[0_0_10px_10px_rgba(0,0,0,0.3)]"></span>
+                            {loading ? "Searching..." : "Search"}
                             </button>
                         </div>
 
-                        {/* Results Table */}
                         <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl backdrop-blur-md ring-1 ring-cyan-500/20 overflow-x-auto">
 
                             {results.length === 0 && !loading && (
