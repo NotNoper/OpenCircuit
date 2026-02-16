@@ -240,8 +240,12 @@ function PlaygroundApp() {
       c.addComp(comp);
     }
 
-    if (side === "left") comp.n1 = node;
-    else comp.n2 = node;
+    if (ui.type === "Battery" && side === "right") {
+      comp.n2 = 0;
+    } else {
+      if (side === "left") comp.n1 = node;
+      else comp.n2 = node;
+    }
 
     c.addNode(node);
   }
