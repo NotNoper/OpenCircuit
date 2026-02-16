@@ -1,6 +1,6 @@
 class Circuit {
   constructor() {
-    this.nodes = new Set([0]);
+    this.nodes = new Set([0]); // ground
     this.components = [];
   }
 
@@ -21,10 +21,10 @@ class Circuit {
     for (let i = 0; i < N; i++) idx[nodesArray[i]] = i;
 
     let voltageSources = this.components.filter(c => c.type === "V");
-    let M = N - 1 + voltageSources.length;
+    const M = N - 1 + voltageSources.length; // exclude ground row/col
 
-    let G = Array.from({ length: M }, () => Array(M).fill(0));
-    let I = Array(M).fill(0);
+    const G = Array.from({ length: M }, () => Array(M).fill(0));
+    const I = Array(M).fill(0);
 
     this.components.forEach(c => {
       if (c.stamp) {
@@ -32,7 +32,7 @@ class Circuit {
       } else if (c.type === "R") {
         let n1 = c.n1 === 0 ? -1 : idx[c.n1] - 1;
         let n2 = c.n2 === 0 ? -1 : idx[c.n2] - 1;
-        let g = 1 / c.value;
+        const g = 1 / c.value;
 
         if (n1 >= 0) G[n1][n1] += g;
         if (n2 >= 0) G[n2][n2] += g;
@@ -44,9 +44,9 @@ class Circuit {
     });
 
     voltageSources.forEach((vs, k) => {
-      let row = N - 1 + k;
-      let n1 = vs.n1 === 0 ? -1 : idx[vs.n1] - 1;
-      let n2 = vs.n2 === 0 ? -1 : idx[vs.n2] - 1;
+      const row = N - 1 + k;
+      const n1 = vs.n1 === 0 ? -1 : idx[vs.n1] - 1;
+      const n2 = vs.n2 === 0 ? -1 : idx[vs.n2] - 1;
 
       if (n1 >= 0) {
         G[row][n1] = 1;
@@ -59,9 +59,9 @@ class Circuit {
       I[row] = vs.value;
     });
 
-    let x = this.solveLinearSystem(G, I);
+    const x = this.solveLinearSystem(G, I);
 
-    let voltages = {};
+    const voltages = {};
     nodesArray.forEach((node, i) => {
       voltages[node] = node === 0 ? 0 : x[i - 1];
     });
@@ -71,7 +71,6 @@ class Circuit {
       if (c.computeCurrent) c.computeCurrent(voltages);
     });
 
-    // Log results and LED states
     console.log("=== Circuit Simulation ===");
     console.log("Voltages:", voltages);
     this.components.forEach(c => {
@@ -80,18 +79,15 @@ class Circuit {
       if (c.type === "V") console.log(`Voltage Source ${c.id} Voltage: ${c.value} V`);
     });
 
-
     return voltages;
   }
 
   solveLinearSystem(A, b) {
     const n = A.length;
-    let M = A.map(r => [...r]); // copy
-    let B = [...b];
-    
-    // Forward elimination
+    const M = A.map(r => [...r]);
+    const B = [...b];
+
     for (let i = 0; i < n; i++) {
-      // Pivot
       let maxRow = i;
       for (let k = i + 1; k < n; k++) {
         if (Math.abs(M[k][i]) > Math.abs(M[maxRow][i])) maxRow = k;
@@ -99,7 +95,6 @@ class Circuit {
       [M[i], M[maxRow]] = [M[maxRow], M[i]];
       [B[i], B[maxRow]] = [B[maxRow], B[i]];
 
-      // Eliminate
       for (let k = i + 1; k < n; k++) {
         const factor = M[k][i] / M[i][i];
         for (let j = i; j < n; j++) M[k][j] -= factor * M[i][j];
@@ -107,7 +102,6 @@ class Circuit {
       }
     }
 
-    // Back substitution
     const x = Array(n).fill(0);
     for (let i = n - 1; i >= 0; i--) {
       let sum = 0;
@@ -116,7 +110,6 @@ class Circuit {
     }
     return x;
   }
-
 }
 
 class Resistor {
@@ -155,20 +148,17 @@ class LED {
   }
 
   stamp(G, I, idx) {
-    let n1 = this.n1 === 0 ? -1 : idx[this.n1] - 1;
-    let n2 = this.n2 === 0 ? -1 : idx[this.n2] - 1;
-
-    let g = 1 / this.Rseries;
+    const n1 = this.n1 === 0 ? -1 : idx[this.n1] - 1;
+    const n2 = this.n2 === 0 ? -1 : idx[this.n2] - 1;
+    const g = 1 / this.Rseries;
 
     if (n1 >= 0) G[n1][n1] += g;
     if (n2 >= 0) G[n2][n2] += g;
-
     if (n1 >= 0 && n2 >= 0) {
       G[n1][n2] -= g;
       G[n2][n1] -= g;
     }
 
-    // Voltage source equivalent (Vf in series)
     if (n1 >= 0) I[n1] += this.Vf * g;
     if (n2 >= 0) I[n2] -= this.Vf * g;
   }
@@ -178,20 +168,18 @@ class LED {
   }
 
   isOn() {
-    if(this.current > 0.001)
-    {
-      console.log("on");
-    }
-    else
-    {
-      console.log("off");
-    }
-
     return this.current > 0.001;
   }
 }
 
-// ====== APP ======
+// ======= Test =======
+const c = new Circuit();
+c.addComp(new VoltageSource(1, 1, 0, 9)); // battery: 9V between node 1 and ground
+c.addComp(new Resistor(2, 1, 2, 470));    // resistor 470Ω between node1 & node2
+c.addComp(new LED(3, 2, 0));               // LED between node2 & ground
+
+c.solveDC();
+
 function PlaygroundApp() {
   const circuitRef = React.useRef(new Circuit());
   const c = circuitRef.current;
