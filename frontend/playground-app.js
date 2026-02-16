@@ -102,6 +102,10 @@ class Circuit {
       // Eliminate
       for (let k = i + 1; k < n; k++) {
         const factor = M[k][i] / M[i][i];
+        if (Math.abs(M[i][i]) < 1e-12) {
+          alert("Singular matrix — check circuit connections.");
+          return Array(n).fill(0);
+        }
         for (let j = i; j < n; j++) M[k][j] -= factor * M[i][j];
         B[k] -= factor * B[i];
       }
@@ -155,21 +159,23 @@ class LED {
   }
 
   stamp(G, I, idx) {
-    let n1 = idx[this.n1];
-    let n2 = idx[this.n2];
+    let n1 = this.n1 === 0 ? -1 : idx[this.n1] - 1;
+    let n2 = this.n2 === 0 ? -1 : idx[this.n2] - 1;
+
     let g = 1 / this.Rseries;
 
     if (n1 >= 0) G[n1][n1] += g;
     if (n2 >= 0) G[n2][n2] += g;
+
     if (n1 >= 0 && n2 >= 0) {
       G[n1][n2] -= g;
       G[n2][n1] -= g;
     }
 
-    if (n1 >= 0) I[n1] += this.Vf / this.Rseries;
-    if (n2 >= 0) I[n2] -= this.Vf / this.Rseries;
+    // Voltage source equivalent (Vf in series)
+    if (n1 >= 0) I[n1] += this.Vf * g;
+    if (n2 >= 0) I[n2] -= this.Vf * g;
   }
-
 
   computeCurrent(v) {
     this.current = (v[this.n1] - v[this.n2] - this.Vf) / this.Rseries;
@@ -246,7 +252,7 @@ function PlaygroundApp() {
     if (side === "left") comp.n1 = node;
     else comp.n2 = node;
 
-    c.addNode(node); // <-- critical
+    c.addNode(node);
   }
 
   function pinClick(id, side) {

@@ -25,11 +25,18 @@ function SignupApp() {
     try {
         const [email, setEmail] = React.useState('');
         const [password, setPassword] = React.useState('');
+        const [confirmed, setConfirmed] = React.useState('');
 
         const handleSignup = (e) => {
             e.preventDefault();
-            console.log('Signing up with:', { email, password });
-            Signup({ email, password });
+            if(password == confirmed)
+            {
+                Signup({ email, password });
+            }
+            else
+            {
+                alert("Passwords are not the same");
+            }
         };
 
         return (
@@ -83,6 +90,22 @@ function SignupApp() {
                                     />
                                 </div>
                                 <p className="mt-1 text-xs text-slate-500">Must be at least 8 characters long.</p>
+                            </div>
+                            <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div className="icon-key text-slate-500"></div>
+                                    </div>
+                                    <input 
+                                        type="password" 
+                                        className="input-field pl-10" 
+                                        placeholder="••••••••"
+                                        value={confirmed}
+                                        onChange={(e) => setConfirmed(e.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
 
                             <button type="submit" className="btn btn-primary w-full py-3">
