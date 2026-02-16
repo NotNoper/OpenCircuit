@@ -239,9 +239,8 @@ function PlaygroundApp() {
     setPending(null);
   }
 
-  function buildCircuit(c) {
-    c.nodes = new Set([0]);
-    c.components = [];
+  function buildCircuit() {
+    const c = new Circuit();
 
     components.forEach(ui => {
       const leftNode = pinNodes.current[`${ui.id}-left`] ?? 0;
@@ -260,19 +259,16 @@ function PlaygroundApp() {
 
       if (comp) c.addComp(comp);
     });
+
+    return c;
   }
 
   function runSimulation() {
-    const c = circuitRef.current;
-
-    buildCircuit(c);
-    const voltages = c.solveDC();
-
-    console.log("Solved:", voltages);
-
-    setComponents(prev => [...prev]);
+    const newCircuit = buildCircuit();
+    circuitRef.current = newCircuit;
+    newCircuit.solveDC();
+    setComponents([...components]);
   }
-
 
   return (
     <div className="min-h-screen flex flex-col">
