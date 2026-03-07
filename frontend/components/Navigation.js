@@ -5,6 +5,7 @@ function Navigation({ activePage }) {
         { name: 'Playground', href: loggedInEmail ? 'playground.html':null, id: 'playground', icon: 'gamepad-2' },
         { name: 'Assembly', href: loggedInEmail ? 'assembly.html':null, id: 'assembly', icon: 'camera' },
         { name: 'Datasheets', href: loggedInEmail ? 'datasheets.html':null, id: 'datasheets', icon: 'file-text' },
+        { name: 'Learning', href: loggedInEmail ? 'learning.html':null, id: 'learning', icon: 'file-text' }
     ];
 
     return (
