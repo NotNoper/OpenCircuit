@@ -5,7 +5,7 @@ function DatasheetsApp() {
         const [loading, setLoading] = React.useState(false);
         
         const loggedInEmail = sessionStorage.getItem("loggedInEmail");
-        if(loggedInEmail)
+        if(!loggedInEmail)
         {
             console.log("not logged in");
             window.location.href = "signup.html";
