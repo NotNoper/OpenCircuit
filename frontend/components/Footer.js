@@ -1,4 +1,5 @@
 function Footer() {
+    const loggedInEmail = sessionStorage.getItem("loggedInEmail");
     try {
         return (
             <footer className="border-t border-slate-800 bg-[var(--bg-dark)] py-12 mt-auto">
@@ -25,9 +26,9 @@ function Footer() {
                         <div>
                             <h4 className="font-bold mb-4">Tools</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a href="playground.html" className="hover:text-cyan-400 transition-colors">Component Playground</a></li>
-                                <li><a href="assembly.html" className="hover:text-cyan-400 transition-colors">Assembly Assistant</a></li>
-                                <li><a href="datasheets.html" className="hover:text-cyan-400 transition-colors">Datasheet Lookup</a></li>
+                                <li><a href={loggedInEmail ? "playground.html":null} className="hover:text-cyan-400 transition-colors">Component Playground</a></li>
+                                <li><a href={loggedInEmail ? "assembly.html":null} className="hover:text-cyan-400 transition-colors">Assembly Assistant</a></li>
+                                <li><a href={loggedInEmail ? "datasheets.html":null} className="hover:text-cyan-400 transition-colors">Datasheet Lookup</a></li>
                             </ul>
                         </div>
                         
