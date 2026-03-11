@@ -205,7 +205,8 @@ function PlaygroundApp() {
   const loggedInEmail = sessionStorage.getItem("loggedInEmail");
   if(loggedInEmail == false)
   {
-      window.location.href = "/notlogged.html";
+    console.log("not logged in");
+    window.location.href = "/signup.html";
   }
 
   React.useEffect(() => {
