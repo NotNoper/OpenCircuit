@@ -3,6 +3,12 @@ function DatasheetsApp() {
         const [search, setSearch] = React.useState('');
         const [results, setResults] = React.useState([]);
         const [loading, setLoading] = React.useState(false);
+        
+        const loggedInEmail = sessionStorage.getItem("loggedInEmail");
+        if(loggedInEmail == false)
+        {
+            window.location.href = "/notlogged.html";
+        }
 
         async function handleSearch() {
             if (!search.trim()) {

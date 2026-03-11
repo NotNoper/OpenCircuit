@@ -201,7 +201,13 @@ function PlaygroundApp() {
   const [pending, setPending] = React.useState(null);
   const nodeCounter = React.useRef(1);
   const pinNodes = React.useRef({});
-  // Dragging
+
+  const loggedInEmail = sessionStorage.getItem("loggedInEmail");
+  if(loggedInEmail == false)
+  {
+      window.location.href = "/notlogged.html";
+  }
+
   React.useEffect(() => {
     function move(e) {
       if (!draggingId) return;

@@ -212,6 +212,12 @@ async function CheckWithAI(prompt) {
 
 function AssemblyApp() {
     const [showCamera, setShowCamera] = React.useState(false);
+    
+    const loggedInEmail = sessionStorage.getItem("loggedInEmail");
+    if(loggedInEmail == false)
+    {
+        window.location.href = "/notlogged.html";
+    }
 
     React.useEffect(() => {
         if (showCamera) RevealCamera();
