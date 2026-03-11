@@ -203,7 +203,7 @@ function PlaygroundApp() {
   const pinNodes = React.useRef({});
 
   const loggedInEmail = sessionStorage.getItem("loggedInEmail");
-  if(loggedInEmail == false)
+  if(loggedInEmail)
   {
     console.log("not logged in");
     window.location.href = "signup.html";
