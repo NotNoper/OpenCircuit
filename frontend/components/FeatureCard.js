@@ -14,10 +14,6 @@ function FeatureCard({ title, description, icon, actionText, color, delay }) {
                     <p className="text-slate-400 mb-6 flex-grow leading-relaxed">
                         {description}
                     </p>
-                    
-                    <div className={`flex items-center text-sm font-bold ${color}`}>
-                        <div className="icon-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></div>
-                    </div>
                 </div>
             </a>
         );
