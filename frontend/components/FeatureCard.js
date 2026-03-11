@@ -16,7 +16,6 @@ function FeatureCard({ title, description, icon, actionText, color, delay }) {
                     </p>
                     
                     <div className={`flex items-center text-sm font-bold ${color}`}>
-                        {actionText}
                         <div className="icon-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></div>
                     </div>
                 </div>
