@@ -1,7 +1,7 @@
-function FeatureCard({ title, description, icon, link, actionText, color, delay }) {
+function FeatureCard({ title, description, icon, actionText, color, delay }) {
     try {
         return (
-            <a href={link} className="block group">
+            <a className="block group">
                 <div className="card h-full flex flex-col items-start relative overflow-hidden group-hover:-translate-y-1 transition-transform duration-300">
                     {/* Hover Glow */}
                     <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 ${color.replace('text-', 'bg-')}`}></div>

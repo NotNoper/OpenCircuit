@@ -1,6 +1,4 @@
 function Footer() {
-    const loggedInEmail = sessionStorage.getItem("loggedInEmail");
-    const toolLink = loggedInEmail ? undefined : null;
     try {
         return (
             <footer className="border-t border-slate-800 bg-[var(--bg-dark)] py-12 mt-auto">
