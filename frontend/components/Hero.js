@@ -21,7 +21,7 @@ function Hero() {
                     </p>
                     
                     <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <a href={loggedInEmail ? "playground.html":null} className="btn btn-primary text-lg w-full md:w-auto group">
+                        <a href={loggedInEmail ? "playground.html":"signup.html"} className="btn btn-primary text-lg w-full md:w-auto group">
                             Launch Playground
                             <div className="icon-zap ml-2 group-hover:text-yellow-300 transition-colors"></div>
                         </a>

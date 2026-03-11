@@ -2,9 +2,9 @@ function Navigation({ activePage }) {
     const loggedInEmail = sessionStorage.getItem("loggedInEmail");
     let links = [
         { name: 'Home', href: 'index.html', id: 'home', icon: 'house' },
-        { name: 'Playground', href: loggedInEmail ? 'playground.html':null, id: 'playground', icon: 'gamepad-2' },
-        { name: 'Assembly', href: loggedInEmail ? 'assembly.html':null, id: 'assembly', icon: 'camera' },
-        { name: 'Datasheets', href: loggedInEmail ? 'datasheets.html':null, id: 'datasheets', icon: 'file-text' },
+        { name: 'Playground', href: loggedInEmail ? 'playground.html':"signup.html", id: 'playground', icon: 'gamepad-2' },
+        { name: 'Assembly', href: loggedInEmail ? 'assembly.html':"signup.html", id: 'assembly', icon: 'camera' },
+        { name: 'Datasheets', href: loggedInEmail ? 'datasheets.html':"signup.html", id: 'datasheets', icon: 'file-text' },
     ];
 
     return (

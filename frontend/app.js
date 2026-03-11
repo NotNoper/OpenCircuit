@@ -82,7 +82,7 @@ function LandingPage() {
                     <section className="py-20 border-t border-slate-800 bg-slate-900/50">
                         <div className="container mx-auto px-6 text-center">
                             <h2 className="text-2xl font-bold mb-8">Ready to energize your workflow?</h2>
-                            <a href={loggedInEmail ? "playground.html":null} className="btn btn-primary text-lg">
+                            <a href={loggedInEmail ? "playground.html":"signup.html"} className="btn btn-primary text-lg">
                                 <span className="mr-2">Start Building</span>
                                 <div className="icon-arrow-right"></div>
                             </a>
